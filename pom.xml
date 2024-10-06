@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ecommerce</groupId>
-	<artifactId>plateform</artifactId>
+	<artifactId>platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>plateform</name>
+	<name>platform</name>
 	<description>An e-commerce platform built with Java and Spring Boot, featuring microservices architecture. This project includes user registration, product catalog management, shopping cart functionality, and order processing. It focuses on REST APIs, SQL databases, security, and scalability for mastering backend development.</description>
 	<url/>
 	<licenses>
