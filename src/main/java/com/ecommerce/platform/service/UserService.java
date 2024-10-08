@@ -2,6 +2,7 @@ package com.ecommerce.platform.service;
 
 import com.ecommerce.platform.model.User;
 import com.ecommerce.platform.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,16 @@ public class UserService {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             return "User already exists";
         }
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         userRepository.save(user);
         return "User registered successfully";
     }
 
     public String login(User user) {
-        // Business logic for user login
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser == null || !BCrypt.checkpw(user.getPassword(), existingUser.getPassword())) {
+            return "Invalid username or password";
+        }
         return "User logged in successfully";
     }
 
