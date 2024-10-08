@@ -1,13 +1,29 @@
 package com.ecommerce.platform.service;
 
 import com.ecommerce.platform.model.User;
+import com.ecommerce.platform.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public String register(User user) {
-        // Business logic for user registration
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            return "User already exists";
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
         return "User registered successfully";
     }
 
@@ -17,7 +33,7 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        // Business logic to get user by ID
-        return new User(); // Replace with actual user retrieval logic
+        return userRepository.findById(id).orElse(null);
     }
+
 }
