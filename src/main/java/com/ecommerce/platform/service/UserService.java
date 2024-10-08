@@ -37,4 +37,37 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public String deleteUser(Long id) {
+        userRepository.deleteById(id);
+        return "User deleted successfully";
+    }
+
+    public String changePassword(User user) {
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (isUserNotFound(existingUser)) {
+            return "User not found";
+        }
+        if (isPasswordEmpty(user.getPassword())) {
+            return "Password cannot be empty";
+        }
+        if (isSameAsOldPassword(user.getPassword(), existingUser.getPassword())) {
+            return "New password cannot be the same as the old password";
+        }
+        existingUser.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        userRepository.save(existingUser);
+        return "Password changed successfully";
+    }
+
+    private boolean isUserNotFound(User user) {
+        return user == null;
+    }
+
+    private boolean isPasswordEmpty(String password) {
+        return password == null || password.isEmpty();
+    }
+
+    private boolean isSameAsOldPassword(String newPassword, String oldPassword) {
+        return BCrypt.checkpw(newPassword, oldPassword);
+    }
+
 }

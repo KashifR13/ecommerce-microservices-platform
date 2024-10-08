@@ -29,4 +29,14 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @PutMapping("/password")
+    public String changePassword(@RequestBody User user) {
+        return userService.changePassword(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
+
 }
