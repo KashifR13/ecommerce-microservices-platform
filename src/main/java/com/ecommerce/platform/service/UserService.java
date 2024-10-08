@@ -19,7 +19,6 @@ public class UserService {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             return "User already exists";
         }
-        user.setPassword(user.getPassword());
         userRepository.save(user);
         return "User registered successfully";
     }
