@@ -29,6 +29,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @PutMapping("/{id}")
+    public String updateUser(@RequestBody User user) {
+        return userService.modifyUserDetails(user);
+    }
+
     @PutMapping("/password")
     public String changePassword(@RequestBody User user) {
         return userService.changePassword(user);
