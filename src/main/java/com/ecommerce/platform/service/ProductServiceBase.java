@@ -13,7 +13,7 @@ public abstract class ProductServiceBase {
         this.productRepository = productRepository;
     }
 
-    protected String getValidationMessage(Product product, Product existingProduct) {
+    protected String getValidationMessage(Product existingProduct) {
         if (isProductNotFound(existingProduct)) {
             return "Product not found";
         }

@@ -6,12 +6,12 @@ import com.ecommerce.platform.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mindrot.jbcrypt.BCrypt;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,10 +87,10 @@ public class UserServiceTest {
 
     @Test
     public void shouldDeleteUserSuccessfully() {
-        doNothing().when(userRepository).deleteById(user.getId());
-        String result = userService.deleteUser(user.getId());
+        doNothing().when(userRepository).deleteById(user.getUserId());
+        String result = userService.deleteUser(user.getUserId());
         assertEquals("User deleted successfully", result, "User should be deleted successfully");
-        verify(userRepository, times(1)).deleteById(user.getId());
+        verify(userRepository, times(1)).deleteById(user.getUserId());
     }
 
     @Test
@@ -103,7 +103,7 @@ public class UserServiceTest {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(existingUser);
         user.setPassword("newPassword");
         user.setEmail("newEmail@example.com");
-        String result = userService.modifyUserDetails(user);
+        String result = userService.modifyUserDetails(user, user.getUserId());
         assertEquals("User details modified successfully", result, "User details should be modified successfully");
         verify(userRepository, times(1)).save(existingUser);
     }

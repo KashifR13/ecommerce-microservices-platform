@@ -47,8 +47,8 @@ public class UserService extends UserServiceBase {
         return "Password changed successfully";
     }
 
-    public String modifyUserDetails(User user) {
-        User existingUser = userRepository.findByUsername(user.getUsername());
+    public String modifyUserDetails(User user, Long userId) {
+        User existingUser = userRepository.findById(userId).orElse(null);
         String validationMessage = getValidationMessage(user, existingUser);
         if (validationMessage != null) return validationMessage;
         existingUser.setEmail(user.getEmail());

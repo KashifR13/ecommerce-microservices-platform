@@ -29,9 +29,9 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PutMapping("/{id}")
-    public String updateUser(@RequestBody User user) {
-        return userService.modifyUserDetails(user);
+    @PutMapping("/{userId}")
+    public String updateUser(@RequestBody User user, @PathVariable Long userId) {
+        return userService.modifyUserDetails(user, userId);
     }
 
     @PutMapping("/password")

@@ -28,9 +28,9 @@ public class ProductService extends ProductServiceBase {
         return "Product deleted successfully";
     }
 
-    public String modifyProductDetails(Product product) {
-        Product existingProduct = productRepository.findByName(product.getName());
-        String validationMessage = getValidationMessage(product, existingProduct);
+    public String modifyProductDetails(Product product, Long productId) {
+        Product existingProduct = productRepository.findById(productId).orElse(null);
+        String validationMessage = getValidationMessage(existingProduct);
         if (validationMessage != null) return validationMessage;
         existingProduct.setCategory(product.getCategory());
         existingProduct.setDescription(product.getDescription());
