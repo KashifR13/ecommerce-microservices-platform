@@ -1,26 +1,25 @@
 package com.ecommerce.platform.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
     private String username;
     private String password;
     private String email;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long id) {
+        this.userId = id;
     }
 
     public String getUsername() {
@@ -46,4 +45,5 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
