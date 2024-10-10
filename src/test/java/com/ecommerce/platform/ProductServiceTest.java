@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,6 +58,13 @@ public class ProductServiceTest {
         when(productRepository.findById(product.getProductId())).thenReturn(Optional.of(product));
         Product result = productService.getProductById(product.getProductId());
         assertEquals(product, result, "Product should be retrieved successfully");
+    }
+
+    @Test
+    public void shouldGetAllProductsSuccessfully() {
+        when(productRepository.findAll()).thenReturn(List.of(product));
+        List<Product> result = productService.getAllProducts();
+        assertEquals(List.of(product), result, "All products should be retrieved successfully");
     }
 
     @Test
