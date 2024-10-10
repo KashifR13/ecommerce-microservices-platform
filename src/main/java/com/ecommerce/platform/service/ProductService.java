@@ -4,6 +4,8 @@ import com.ecommerce.platform.model.Product;
 import com.ecommerce.platform.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService extends ProductServiceBase {
 
@@ -17,6 +19,10 @@ public class ProductService extends ProductServiceBase {
         }
         productRepository.save(product);
         return "Product added to the cart successfully";
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     public Product getProductById(Long id) {
