@@ -2,6 +2,7 @@ package com.ecommerce.platform.controller;
 
 import com.ecommerce.platform.model.Product;
 import com.ecommerce.platform.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,9 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public String addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        productService.addProduct(product);
+        return ResponseEntity.ok("Product added successfully");
     }
 
     @GetMapping("/all")
