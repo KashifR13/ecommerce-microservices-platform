@@ -5,6 +5,7 @@ import Register from './components/Register';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetails';
 import Cart from './components/Cart';
+import Checkout from './components/Checkout';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/products/all" element={<ProductList/>}/>
                     <Route path="/products/:id" element={<ProductDetail/>}/>
                     <Route path="/cart" element={<Cart/>}/>
+                    <Route path="/checkout" element={<Checkout/>}/>
                 </Routes>
             </Router>
         </div>
