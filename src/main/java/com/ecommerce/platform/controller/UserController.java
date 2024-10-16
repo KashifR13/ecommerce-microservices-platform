@@ -5,6 +5,7 @@ import com.ecommerce.platform.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/users")
 public class UserController {
 
@@ -24,9 +25,9 @@ public class UserController {
         return userService.login(user);
     }
 
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.getUserById(id);
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable Long userId) {
+        return userService.getUserById(userId);
     }
 
     @PutMapping("/{userId}")
@@ -39,9 +40,9 @@ public class UserController {
         return userService.changePassword(user);
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        return userService.deleteUser(id);
+    @DeleteMapping("/{userId}")
+    public String deleteUser(@PathVariable Long userId) {
+        return userService.deleteUser(userId);
     }
 
 }
