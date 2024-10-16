@@ -10,12 +10,12 @@ public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long cartItemId;
     private Long productId;
     private Integer quantity;
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCartItemId(Long id) {
+        this.cartItemId = id;
     }
 
     public void setProductId(Long productId) {
@@ -26,8 +26,8 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public Long getProductId() {
