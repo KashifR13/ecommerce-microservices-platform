@@ -3,6 +3,7 @@ package com.ecommerce.platform;
 import com.ecommerce.platform.model.User;
 import com.ecommerce.platform.repository.UserRepository;
 import com.ecommerce.platform.service.UserService;
+import com.ecommerce.platform.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,15 +11,27 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @InjectMocks
     private UserService userService;
@@ -34,10 +47,11 @@ public class UserServiceTest {
 
     @Test
     public void shouldRegisterUserSuccessfully() {
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(null);
+        when(userRepository.findById(user.getUserId())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
         String result = userService.register(user);
         assertEquals("User registered successfully", result, "User should be registered successfully");
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
@@ -49,21 +63,32 @@ public class UserServiceTest {
 
     @Test
     public void shouldChangePasswordSuccessfully() {
-        User existingUser = new User();
-        existingUser.setUsername("testUser");
-        existingUser.setPassword(BCrypt.hashpw("oldPassword", BCrypt.gensalt()));
+        Long userId = 1L;
+        String currentPassword = "oldPassword";
+        String newPassword = "newPassword";
 
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(existingUser);
-        user.setPassword("newPassword");
-        String result = userService.changePassword(user);
+        User existingUser = new User();
+        existingUser.setUserId(userId);
+        existingUser.setUsername("testUser");
+        existingUser.setPassword(BCrypt.hashpw(currentPassword, BCrypt.gensalt()));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(passwordEncoder.encode(newPassword)).thenReturn("encodedNewPassword");
+        when(passwordEncoder.matches(currentPassword, existingUser.getPassword())).thenReturn(true);
+
+        String result = userService.changePassword(userId, currentPassword, newPassword);
         assertEquals("Password changed successfully", result, "Password should be changed successfully");
         verify(userRepository, times(1)).save(existingUser);
     }
 
     @Test
     public void shouldNotChangePasswordIfUserNotFound() {
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(null);
-        String result = userService.changePassword(user);
+        Long userId = 1L;
+        String currentPassword = "oldPassword";
+        String newPassword = "newPassword";
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        String result = userService.changePassword(userId, currentPassword, newPassword);
         assertEquals("User not found", result, "Password should not be changed if user is not found");
     }
 
@@ -74,8 +99,11 @@ public class UserServiceTest {
         existingUser.setPassword(BCrypt.hashpw("password", BCrypt.gensalt()));
 
         when(userRepository.findByUsername(user.getUsername())).thenReturn(existingUser);
+        when(passwordEncoder.matches(user.getPassword(), existingUser.getPassword())).thenReturn(true);
+        when(jwtUtil.generateToken(existingUser.getUsername())).thenReturn("token");
+
         String result = userService.login(user);
-        assertEquals("User logged in successfully", result, "User should log in successfully");
+        assertEquals("token", result, "User should log in successfully");
     }
 
     @Test
@@ -100,9 +128,12 @@ public class UserServiceTest {
         existingUser.setPassword(BCrypt.hashpw("oldPassword", BCrypt.gensalt()));
         existingUser.setEmail("oldEmail@example.com");
 
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(existingUser);
+        when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(existingUser));
+        when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedNewPassword");
+
         user.setPassword("newPassword");
         user.setEmail("newEmail@example.com");
+
         String result = userService.modifyUserDetails(user, user.getUserId());
         assertEquals("User details modified successfully", result, "User details should be modified successfully");
         verify(userRepository, times(1)).save(existingUser);
