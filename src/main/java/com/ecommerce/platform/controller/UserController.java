@@ -35,8 +35,8 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public String changePassword(@RequestBody User user) {
-        return userService.changePassword(user);
+    public String changePassword(@RequestParam Long userId, @RequestParam String currentPassword, @RequestParam String newPassword) {
+        return userService.changePassword(userId, currentPassword, newPassword);
     }
 
     @DeleteMapping("/{id}")
