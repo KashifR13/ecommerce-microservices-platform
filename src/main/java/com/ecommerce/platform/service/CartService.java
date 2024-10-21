@@ -5,8 +5,6 @@ import com.ecommerce.platform.model.CartItem;
 import com.ecommerce.platform.repository.CartRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CartService {
 
@@ -17,27 +15,30 @@ public class CartService {
     }
 
     public Cart getCartByUserId(Long userId) {
-        return cartRepository.findByUserId(userId).orElseGet(() -> createAndSaveCart(userId));
+        return cartRepository.findByUserId(userId).orElse(null);
     }
 
     public Cart addItemToCart(Long userId, CartItem item) {
-        Cart cart = getCartByUserId(userId);
-        List<CartItem> cartItems = cart.getItems();
-        cartItems.add(item);
+        Cart cart = getOrCreateCart(userId);
+        cart.getCartItems().add(item);
         return cartRepository.save(cart);
     }
 
     public Cart removeItemFromCart(Long userId, Long productId) {
         Cart cart = getCartByUserId(userId);
-        List<CartItem> cartItems = cart.getItems();
-        cartItems.removeIf(item -> item.getProductId().equals(productId));
-        return cartRepository.save(cart);
+        if (cart != null) {
+            cart.getCartItems().removeIf(cartItem -> cartItem.getProductId().equals(productId));
+            return cartRepository.save(cart);
+        }
+        return null;
     }
 
-    private Cart createAndSaveCart(Long userId) {
-        Cart cart = new Cart();
-        cart.setUserId(userId);
-        return cartRepository.save(cart);
+    private Cart getOrCreateCart(Long userId) {
+        Cart cart = getCartByUserId(userId);
+        if (cart == null) {
+            cart = new Cart(userId);
+        }
+        return cart;
     }
 
 }

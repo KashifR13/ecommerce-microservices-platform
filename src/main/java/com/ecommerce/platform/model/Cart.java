@@ -1,6 +1,8 @@
 package com.ecommerce.platform.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,7 +14,18 @@ public class Cart {
     private Long userId;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items;
+    private List<CartItem> cartItems;
+
+    public Cart(List<CartItem> items) {
+        this.cartItems = items;
+    }
+
+    public Cart(Long userId) {
+        this.userId = userId;
+        this.cartItems = new ArrayList<>();
+    }
+
+    public Cart() {}
 
     public Long getCartId() {
         return cartId;
@@ -26,16 +39,16 @@ public class Cart {
         this.userId = userId;
     }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
+    public void setCartItems(List<CartItem> items) {
+        this.cartItems = items;
     }
 
     public Long getUserId() {
         return userId;
     }
 
-    public List<CartItem> getItems() {
-        return items;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
 }
