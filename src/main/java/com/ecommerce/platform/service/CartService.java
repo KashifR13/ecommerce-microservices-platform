@@ -1,5 +1,6 @@
 package com.ecommerce.platform.service;
 
+import com.ecommerce.platform.exception.CartNotFoundException;
 import com.ecommerce.platform.model.Cart;
 import com.ecommerce.platform.model.CartItem;
 import com.ecommerce.platform.repository.CartRepository;
@@ -15,7 +16,8 @@ public class CartService {
     }
 
     public Cart getCartByUserId(Long userId) {
-        return cartRepository.findByUserId(userId).orElse(null);
+        return cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for user id: " + userId));
     }
 
     public Cart addItemToCart(Long userId, CartItem item) {
@@ -30,7 +32,7 @@ public class CartService {
             cart.getCartItems().removeIf(cartItem -> cartItem.getProductId().equals(productId));
             return cartRepository.save(cart);
         }
-        return null;
+        throw new CartNotFoundException("Cart not found for user id: " + userId);
     }
 
     private Cart getOrCreateCart(Long userId) {
