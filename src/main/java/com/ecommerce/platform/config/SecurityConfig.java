@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/platform/config/SecurityConfig.java
 package com.ecommerce.platform.config;
 
 import org.springframework.context.annotation.Bean;
