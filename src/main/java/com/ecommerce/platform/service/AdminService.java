@@ -1,6 +1,5 @@
 package com.ecommerce.platform.service;
 
-import com.ecommerce.platform.model.Admin;
 import com.ecommerce.platform.model.Order;
 import com.ecommerce.platform.model.Product;
 import com.ecommerce.platform.model.User;
