@@ -1,5 +1,6 @@
 package com.ecommerce.platform.service;
 
+import com.ecommerce.platform.exception.OrderNotFoundException;
 import com.ecommerce.platform.exception.PaymentNotFoundException;
 import com.ecommerce.platform.model.Order;
 import com.ecommerce.platform.model.Payment;
@@ -23,7 +24,8 @@ public class PaymentService {
     }
 
     public Payment processPayment(Long orderId, Double amount) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setPaymentDate(new Date());

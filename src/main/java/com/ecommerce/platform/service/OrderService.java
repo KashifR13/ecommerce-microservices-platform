@@ -1,5 +1,7 @@
 package com.ecommerce.platform.service;
 
+import com.ecommerce.platform.exception.OrderNotFoundException;
+import com.ecommerce.platform.exception.UserNotFoundException;
 import com.ecommerce.platform.model.Order;
 import com.ecommerce.platform.model.OrderItem;
 import com.ecommerce.platform.model.User;
@@ -24,7 +26,8 @@ public class OrderService {
     }
 
     public Order placeOrder(Long userId, List<OrderItem> orderItems) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         Order order = new Order();
         order.setUser(user);
         order.setOrderItems(orderItems);
@@ -38,7 +41,8 @@ public class OrderService {
     }
 
     public Order getOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
     }
 
     public void cancelOrder(Long orderId) {

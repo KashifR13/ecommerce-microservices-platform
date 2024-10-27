@@ -1,5 +1,6 @@
 package com.ecommerce.platform.service;
 
+import com.ecommerce.platform.exception.ProductNotFoundException;
 import com.ecommerce.platform.model.Product;
 import com.ecommerce.platform.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class ProductService extends ProductServiceBase {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
     public String deleteProduct(Long id) {
@@ -35,7 +37,8 @@ public class ProductService extends ProductServiceBase {
     }
 
     public String modifyProductDetails(Product product, Long productId) {
-        Product existingProduct = productRepository.findById(productId).orElse(null);
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         String validationMessage = getValidationMessage(existingProduct);
         if (validationMessage != null) return validationMessage;
         existingProduct.setCategory(product.getCategory());

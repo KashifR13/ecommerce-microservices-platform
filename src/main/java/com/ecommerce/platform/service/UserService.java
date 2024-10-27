@@ -1,5 +1,6 @@
 package com.ecommerce.platform.service;
 
+import com.ecommerce.platform.exception.UserNotFoundException;
 import com.ecommerce.platform.model.User;
 import com.ecommerce.platform.repository.UserRepository;
 import com.ecommerce.platform.util.JwtUtil;
@@ -37,11 +38,13 @@ public class UserService extends UserServiceBase {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public String modifyUserDetails(User user, Long userId) {
-        User existingUser = userRepository.findById(userId).orElse(null);
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         String validationMessage = getValidationMessageForUserDetailsModification(user, existingUser);
         if (validationMessage != null) return validationMessage;
         existingUser.setEmail(user.getEmail());
@@ -51,7 +54,8 @@ public class UserService extends UserServiceBase {
     }
 
     public String changePassword(Long userId, String currentPassword, String newPassword) {
-        User existingUser = userRepository.findById(userId).orElse(null);
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         String validationMessage = getValidationMessageForPasswordChange(currentPassword, newPassword, existingUser);
         if (validationMessage != null) return validationMessage;
         existingUser.setPassword(passwordEncoder.encode(newPassword));
