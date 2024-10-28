@@ -60,4 +60,8 @@ public class OrderItem {
         return price;
     }
 
+    public String getProductName() {
+        return product.getName();
+    }
+
 }
