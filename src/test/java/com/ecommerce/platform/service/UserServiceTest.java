@@ -1,8 +1,7 @@
-package com.ecommerce.platform;
+package com.ecommerce.platform.service;
 
 import com.ecommerce.platform.model.User;
 import com.ecommerce.platform.repository.UserRepository;
-import com.ecommerce.platform.service.UserService;
 import com.ecommerce.platform.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
