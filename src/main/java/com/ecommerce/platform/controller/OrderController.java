@@ -3,7 +3,7 @@ package com.ecommerce.platform.controller;
 import com.ecommerce.platform.model.Order;
 import com.ecommerce.platform.model.OrderItem;
 import com.ecommerce.platform.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,29 +14,32 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
     @PostMapping("/place")
-    public Order placeOrder(@RequestParam Long userId, @RequestBody List<OrderItem> orderItems) {
-        return orderService.placeOrder(userId, orderItems);
+    public ResponseEntity<Order> placeOrder(@RequestParam Long userId, @RequestBody List<OrderItem> orderItems) {
+        Order order = orderService.placeOrder(userId, orderItems);
+        return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
-        return orderService.getOrdersByUserId(userId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long userId) {
+        List<Order> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{orderId}")
-    public Order getOrderById(@PathVariable Long orderId) {
-        return orderService.getOrderById(orderId);
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+        Order order = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(order);
     }
 
     @PutMapping("/cancel/{orderId}")
-    public void cancelOrder(@PathVariable Long orderId) {
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {
         orderService.cancelOrder(orderId);
+        return ResponseEntity.ok().build();
     }
 
 }
